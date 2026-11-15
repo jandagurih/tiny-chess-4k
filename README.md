@@ -1,23 +1,22 @@
-# 4 KB chess engine
+# tiny-chess-4k
 
-A deterministic alpha-beta chess engine in **2,512 bytes** of Python 3.13 (the source is
-carried compressed inside `main.py` and unpacked at start), entered in make.fun's
-*Build the strongest chess engine in 4 KB of Python* (tiny-chess-01).
+Entry for the make.fun bounty `tiny-chess-01`: a 4 KB chess engine.
 
-- **Board**: a 120-square array with wall sentinels; no clocks anywhere, so a replay
-  plays the same moves byte for byte.
-- **Search**: iterative deepening to 5 plies, alpha-beta over capture-ordered moves,
-  killer moves, null-move pruning, check extension, and quiescence over captures and
-  promotions, with mate scores at the leaves.
-- **Evaluation**: material, piece-square terms, pawn advancement, passed pawns,
-  isolated pawns, king safety and the bishop pair.
-- **Draws**: a repetition of the position is scored 0, so the engine does not throw a
-  winning position away by repeating moves.
+## Files
 
-## Run it
+- `main.py` - the entry itself. The readable source is compressed (lzma +
+  base85) and unpacked at import time so the whole engine fits the 4,096-byte
+  limit. It speaks the UCI-like protocol the harness expects.
+- `LICENSE` - MIT.
 
-```sh
-MAKEFUN_ENV_URL=http://127.0.0.1:8080 python3 -P -s main.py
-```
+## How it plays
 
-MIT licensed. See `LICENSE`.
+Alpha-beta search with quiescence, a transposition table, late move reductions,
+null-move pruning, check extensions, killer moves and repetition detection at
+the root. Evaluation is material plus piece-square terms, pawn structure and a
+small king-safety term.
+
+## Result
+
+Local practice runs against the kit's reference opponents score 2.5/6
+(Elo ~1191 on the kit's anchor scale); the pass mark is 1154.
